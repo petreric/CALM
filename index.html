@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="description" content="CALM: Decentralized Learning Control for Cooperative Multi-UAV Manipulation with Robotic Arms">
-<title>Decentralized Learning Control for Cooperative Multi-UAV Manipulation with Robotic Arms</title>
+<title>CALM: Decentralized Control of Cooperative Aerial Manipulation with Multi-Agent Reinforcement Learning</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,600&family=Source+Serif+4:opsz,wght@8..60,400;8..60,500;8..60,600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -218,7 +218,7 @@
 <body>
 
 <div class="hero">
-  <h1 class="title">Decentralized Learning Control for Cooperative Multi-UAV Manipulation with Robotic Arms</h1>
+  <h1 class="title">CALM: Decentralized Control of Cooperative Aerial Manipulation with Multi-Agent Reinforcement Learning</h1>
 
   <p class="authors">
     <a href="#">Jiaxi Huo</a><sup>1</sup>,
@@ -248,21 +248,19 @@
         <circle cx="47" cy="40" r="5.5" fill="#1f6fd6"/>
       </svg>
       <p>
-        Cooperative aerial manipulation couples several vehicles through a shared payload, so wind, payload
-        motion, and an imperfect reference all degrade tracking. We present CALM (Cooperative Aerial Learned
-        Manipulation), a decentralized controller for multiple multirotors that manipulate a basket through
-        actuated robotic arms while following a moving ground robot sensed through a noisy goal broadcast. One
-        multi-agent policy, copied on every vehicle, runs inside a fixed non-learned loop with goal previews,
-        per-vehicle disturbance observers, bounded reference feedforward, and an anticipatory formation-yaw
-        couple whose allocation we prove exact, with bounded fixed-offset error. Privileged disturbance
-        information is confined to the training scaffold, where it conditions the centralized critic and a
-        reward deadband. At execution the policy input is local apart from a common payload-mass scalar, and
-        the non-learned loop additionally uses the formation geometry and the average of the per-vehicle
-        disturbance estimates. Across held-out trajectories and independent wind and center-of-mass sweeps,
-        CALM reaches lower mean position and attitude errors than an arm-platform prior-method MARL baseline
-        with its own training stack (7.68 versus 10.95&nbsp;cm and 3.3 versus 4.7&deg;). It retains this margin
-        under unseen goal-channel and team-signal degradation, while outperforming the cable-suspended
-        realization in basket-attitude tracking.
+        Cooperative aerial manipulation is difficult under wind, payload motion, and noisy references because
+        multiple UAVs are coupled through a shared load. We present CALM (Cooperative Aerial Learned
+        Manipulation), a decentralized controller for aerial manipulators carrying a basket while tracking a
+        moving ground robot. CALM combines a parameter-shared Multi-Agent Proximal Policy Optimization (MAPPO)
+        policy with reference prediction, per-UAV Extended-State Observers (ESOs), payload-mass estimation, and
+        anticipatory formation-yaw feedforward. The anticipatory formation-yaw feedforward uses estimated
+        target motion to rotate the formation before position error develops, reducing basket-yaw lag without
+        adding net commanded force. A disturbance-conditioned critic supports centralized training while
+        execution remains decentralized. Across held-out trajectories, CALM achieves lower mean position and
+        attitude errors than the matched arm baseline (7.68 versus 10.95&nbsp;cm and 3.3 versus 4.7&deg;), a
+        cable-suspended realization, and the two evaluated model-based controllers. It remains superior to or
+        statistically tied with the arm baseline under unseen degradation of the full information path. Videos
+        can be found at <a href="https://petreric.github.io/CALM/">https://petreric.github.io/CALM/</a>.
       </p>
     </div>
   </section>
@@ -272,35 +270,13 @@
     <div class="video-gallery">
 
       <div class="video-card">
-        <video controls muted loop playsinline>
-          <source src="./static/videos/calm_wind_training_bound.mp4" type="video/mp4">
+        <video controls playsinline>
+          <source src="./static/video/full_presentation_compressed.mp4" type="video/mp4">
           Your browser does not support the video tag.
         </video>
         <div class="caption">
-          <h3>(a) Wind at training bound</h3>
-          <p>1.15&nbsp;N per vehicle (&asymp;7.1&nbsp;m/s equivalent).</p>
-        </div>
-      </div>
-
-      <div class="video-card">
-        <video controls muted loop playsinline>
-          <source src="./static/videos/calm_wind_2x_bound.mp4" type="video/mp4">
-          Your browser does not support the video tag.
-        </video>
-        <div class="caption">
-          <h3>(b) Wind at twice the training bound</h3>
-          <p>2.30&nbsp;N per vehicle (&asymp;10.0&nbsp;m/s equivalent).</p>
-        </div>
-      </div>
-
-      <div class="video-card">
-        <video controls muted loop playsinline>
-          <source src="./static/videos/calm_com_max_deviation.mp4" type="video/mp4">
-          Your browser does not support the video tag.
-        </video>
-        <div class="caption">
-          <h3>(c) Largest swept CoM deviation</h3>
-          <p>0.20&nbsp;m stationary center-of-mass deviation.</p>
+          <h3>Full experiment walkthrough</h3>
+          <p>Nominal tracking with no disturbance, then wind, then a moving payload center of mass, shown in sequence.</p>
         </div>
       </div>
 
@@ -341,9 +317,9 @@
       error grows from 2.85 to 10.81&nbsp;cm across the tested range, while the arm baseline grows from 3.67
       to 13.75&nbsp;cm; CALM stays lower at every wind level tested, and both degrade continuously rather than
       failing abruptly. At the largest level (10.0&nbsp;m/s equivalent), the cable-suspended baseline reaches
-      12.14&nbsp;cm position error with 47&deg; median vehicle tilt and uncontrolled load attitude. The
+      12.23&nbsp;cm position error with 47&deg; median vehicle tilt and uncontrolled load attitude. The
       center-of-mass sweep isolates articulated load control: from 0.05 to 0.20&nbsp;m deviation, CALM changes
-      only from 3.27 to 5.14&nbsp;cm, whereas the cable baseline grows from 7.25 to 54.71&nbsp;cm and remains
+      only from 3.27 to 5.14&nbsp;cm, whereas the cable baseline grows from 7.27 to 54.55&nbsp;cm and remains
       at least 11&times; worse in orientation throughout. Both arm-based controllers hold basket attitude
       within a few degrees even at the largest deviation, where offset clipping pushes them toward the same
       saturated-torque regime.
@@ -356,7 +332,7 @@
       <div class="bibtex-bar">Citation</div>
       <pre>@article{calm2027,
   author  = {Huo, Jiaxi and Ricioppo, Petre and Lizzio, Fausto Francesco},
-  title   = {Decentralized Learning Control for Cooperative Multi-UAV Manipulation with Robotic Arms},
+  title   = {CALM: Decentralized Control of Cooperative Aerial Manipulation with Multi-Agent Reinforcement Learning},
   journal = {TBD},
   year    = {2027}
 }</pre>
